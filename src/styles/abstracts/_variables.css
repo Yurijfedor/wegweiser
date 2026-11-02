@@ -1,0 +1,33 @@
+:root {
+  /* Brand */
+  --color-primary: #285c4d;
+  --color-primary-dark: #1e473b;
+  --color-primary-light: #e8f1ec;
+  --color-accent: #b8d9c7;
+
+  /* Backgrounds */
+  --color-background: #f7f9f6;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f0f5f1;
+
+  /* Text */
+  --color-text: #253b35;
+  --color-text-secondary: #718078;
+  --color-text-muted: #9aa69f;
+
+  /* Borders and effects */
+  --color-border: #e5ebe6;
+  --shadow-card: 0 8px 30px rgba(37, 59, 53, 0.05);
+
+  /* Typography */
+  --font-body: "DM Sans", sans-serif;
+  --font-heading: "Manrope", sans-serif;
+
+  /* Shape */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+
+  /* Layout */
+  --container-width: 1200px;
+}

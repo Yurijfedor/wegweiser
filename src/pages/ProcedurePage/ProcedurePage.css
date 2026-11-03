@@ -1,0 +1,192 @@
+.procedure-page {
+  min-height: 60vh;
+  padding: 60px 24px 90px;
+  background: var(--color-background);
+}
+
+.procedure-page__container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.procedure-page__back {
+  display: inline-block;
+  margin-bottom: 36px;
+  color: var(--color-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.procedure-page__header {
+  padding-bottom: 36px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.procedure-page__eyebrow {
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.procedure-page__header h1 {
+  margin: 16px 0;
+  font-size: clamp(32px, 5vw, 46px);
+}
+
+.procedure-page__header > p {
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+.procedure-page__deadline {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 14px 18px;
+  background: var(--color-primary-light);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+}
+
+.procedure-page__section,
+.procedure-page__authority,
+.procedure-page__sources {
+  margin-top: 48px;
+}
+
+.procedure-page__section h2,
+.procedure-page__authority h2,
+.procedure-page__sources h2 {
+  margin-bottom: 24px;
+  font-size: 24px;
+}
+
+.procedure-page__steps {
+  display: grid;
+  gap: 20px;
+}
+
+.procedure-step {
+  display: flex;
+  gap: 20px;
+  padding: 24px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.procedure-step__number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  border-radius: 50%;
+  font-weight: 700;
+}
+
+.procedure-step__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.procedure-step__content h3 {
+  margin: 4px 0 10px;
+  font-size: 18px;
+}
+
+.procedure-step__content > p {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.procedure-step__documents {
+  display: grid;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.procedure-step__documents h4 {
+  margin: 0 0 4px;
+  font-size: 14px;
+}
+
+.procedure-document {
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  background: var(--color-surface-soft);
+  border-radius: var(--radius-sm);
+}
+
+.procedure-document__title {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.procedure-document__description,
+.procedure-document__condition {
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.procedure-document__condition {
+  font-style: italic;
+}
+
+.procedure-document__status {
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.procedure-page__authority {
+  padding: 28px;
+  background: var(--color-primary-light);
+  border-radius: var(--radius-md);
+}
+
+.procedure-page__authority h3 {
+  margin-bottom: 16px;
+}
+
+.procedure-page__authority p {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.procedure-page__authority a,
+.procedure-page__sources a {
+  display: block;
+  margin-top: 16px;
+  color: var(--color-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.procedure-page__sources a {
+  padding: 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+@media (max-width: 560px) {
+  .procedure-page {
+    padding: 40px 16px 60px;
+  }
+
+  .procedure-step {
+    gap: 14px;
+    padding: 18px;
+  }
+
+  .procedure-page__authority {
+    padding: 22px;
+  }
+}

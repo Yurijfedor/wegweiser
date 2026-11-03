@@ -1,0 +1,1 @@
+export { wohnsitzAnmelden } from "./wohnen";

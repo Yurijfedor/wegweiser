@@ -4,6 +4,8 @@ import { wohnsitzAnmelden } from "../../data/procedures";
 
 import { Header, Footer } from "../../components/layout";
 
+import Checklist from "../../components/procedures/Checklist";
+
 import "./ProcedurePage.css";
 
 const ProcedurePage = () => {
@@ -52,54 +54,7 @@ const ProcedurePage = () => {
             )}
           </div>
 
-          <section className="procedure-page__section">
-            <h2>Deine nächsten Schritte</h2>
-
-            <div className="procedure-page__steps">
-              {procedure.steps.map((step, index) => (
-                <article className="procedure-step" key={step.id}>
-                  <div className="procedure-step__number">{index + 1}</div>
-
-                  <div className="procedure-step__content">
-                    <h3>{step.title}</h3>
-                    <p>{step.description}</p>
-
-                    {step.documents.length > 0 && (
-                      <div className="procedure-step__documents">
-                        <h4>Benötigte Unterlagen</h4>
-
-                        {step.documents.map((document) => (
-                          <div className="procedure-document" key={document.id}>
-                            <span className="procedure-document__title">
-                              {document.title}
-                            </span>
-
-                            <span className="procedure-document__description">
-                              {document.description}
-                            </span>
-
-                            {document.condition && (
-                              <span className="procedure-document__condition">
-                                {document.condition}
-                              </span>
-                            )}
-
-                            <span className="procedure-document__status">
-                              {document.condition && document.required
-                                ? "Je nach Situation erforderlich"
-                                : document.required
-                                  ? "Erforderlich"
-                                  : "Zusätzlich"}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
+          <Checklist procedure={procedure} />
 
           {procedure.authority && (
             <section className="procedure-page__authority">

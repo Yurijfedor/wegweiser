@@ -18,14 +18,45 @@ const Checklist = ({ procedure }: ChecklistProps) => {
     0,
   );
 
-  const completedCount = Object.values(completedItems).filter(Boolean).length;
+  const completedCount = procedure.steps.reduce((total, step) => {
+    const completedDocuments = step.documents.filter((document) =>
+      Boolean(completedItems[document.id]),
+    ).length;
+
+    const isStepCompleted =
+      step.documents.length > 0
+        ? completedDocuments === step.documents.length
+        : Boolean(completedItems[step.id]);
+
+    return total + completedDocuments + Number(isStepCompleted);
+  }, 0);
 
   const progress = totalItems > 0 ? (completedCount / totalItems) * 100 : 0;
 
-  const toggleItem = (id: string) => {
+  const toggleStep = (stepId: string, checked: boolean) => {
+    const step = procedure.steps.find((item) => item.id === stepId);
+
+    if (!step) return;
+
+    setCompletedItems((previous) => {
+      const updated = { ...previous };
+
+      if (step.documents.length > 0) {
+        step.documents.forEach((document) => {
+          updated[document.id] = checked;
+        });
+      } else {
+        updated[step.id] = checked;
+      }
+
+      return updated;
+    });
+  };
+
+  const toggleDocument = (documentId: string) => {
     setCompletedItems((previous) => ({
       ...previous,
-      [id]: !previous[id],
+      [documentId]: !previous[documentId],
     }));
   };
 
@@ -67,8 +98,14 @@ const Checklist = ({ procedure }: ChecklistProps) => {
             <label className="checklist-step__heading">
               <input
                 type="checkbox"
-                checked={Boolean(completedItems[step.id])}
-                onChange={() => toggleItem(step.id)}
+                checked={
+                  step.documents.length > 0
+                    ? step.documents.every((document) =>
+                        Boolean(completedItems[document.id]),
+                      )
+                    : Boolean(completedItems[step.id])
+                }
+                onChange={(event) => toggleStep(step.id, event.target.checked)}
               />
 
               <span className="checklist-step__number">{index + 1}</span>
@@ -85,7 +122,7 @@ const Checklist = ({ procedure }: ChecklistProps) => {
                     <input
                       type="checkbox"
                       checked={Boolean(completedItems[document.id])}
-                      onChange={() => toggleItem(document.id)}
+                      onChange={() => toggleDocument(document.id)}
                     />
 
                     <span className="checklist-document__content">

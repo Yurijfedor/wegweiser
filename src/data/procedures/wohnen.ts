@@ -99,3 +99,78 @@ export const wohnsitzAnmelden: Procedure = {
     },
   ],
 };
+
+export const wohnungKuendigen: Procedure = {
+  id: "wohnung-kuendigen",
+  categoryId: "wohnen",
+  title: "Wohnung kündigen",
+  description:
+    "Kündige deinen Mietvertrag rechtzeitig und bereite deinen Auszug vor.",
+
+  region: "Deutschland",
+
+  deadline: "Prüfe die Kündigungsfrist in deinem Mietvertrag.",
+
+  steps: [
+    {
+      id: "contract",
+      title: "Mietvertrag prüfen",
+      description:
+        "Prüfe die Kündigungsfrist und mögliche besondere Regelungen in deinem Mietvertrag.",
+      documents: [
+        {
+          id: "rental-contract",
+          title: "Mietvertrag",
+          description:
+            "Prüfe die vereinbarte Kündigungsfrist und die Bedingungen für die Kündigung.",
+          required: true,
+        },
+      ],
+    },
+    {
+      id: "termination-letter",
+      title: "Kündigung vorbereiten",
+      description:
+        "Erstelle ein schriftliches Kündigungsschreiben für deinen Vermieter.",
+      documents: [
+        {
+          id: "termination-letter-document",
+          title: "Kündigungsschreiben",
+          description:
+            "Das Schreiben sollte eindeutig erklären, dass du den Mietvertrag kündigen möchtest.",
+          required: true,
+        },
+      ],
+    },
+    {
+      id: "send-termination",
+      title: "Kündigung versenden",
+      description:
+        "Sende die Kündigung rechtzeitig an deinen Vermieter und bewahre einen Nachweis über die Zustellung auf.",
+      documents: [
+        {
+          id: "delivery-proof",
+          title: "Zustellnachweis",
+          description:
+            "Bewahre einen Nachweis auf, dass deine Kündigung den Vermieter erreicht hat.",
+          required: false,
+        },
+      ],
+    },
+    {
+      id: "handover",
+      title: "Wohnung übergeben",
+      description:
+        "Vereinbare einen Termin zur Wohnungsübergabe und dokumentiere den Zustand der Wohnung.",
+      documents: [
+        {
+          id: "handover-protocol",
+          title: "Übergabeprotokoll",
+          description:
+            "Halte den Zustand der Wohnung und die Zählerstände bei der Übergabe fest.",
+          required: false,
+        },
+      ],
+    },
+  ],
+};

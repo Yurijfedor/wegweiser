@@ -1,9 +1,14 @@
 import { categories } from "../../../data/categories";
+
 import CategoryCard from "./CategoryCard";
 
 import "./Categories.css";
 
-const Categories = () => {
+interface CategoriesProps {
+  onCategorySelect: (categoryId: string) => void;
+}
+
+const Categories = ({ onCategorySelect }: CategoriesProps) => {
   return (
     <section className="categories" id="themen">
       <div className="categories__container">
@@ -22,7 +27,11 @@ const Categories = () => {
 
         <div className="categories__grid">
           {categories.map((category) => (
-            <CategoryCard key={category.id} category={category} />
+            <CategoryCard
+              key={category.id}
+              category={category}
+              onSelect={onCategorySelect}
+            />
           ))}
         </div>
       </div>

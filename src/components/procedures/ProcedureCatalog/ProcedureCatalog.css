@@ -1,0 +1,117 @@
+.procedure-catalog {
+  padding: 80px 24px;
+  background: var(--color-surface-soft);
+}
+
+.procedure-catalog__container {
+  width: min(100%, 1200px);
+  margin: 0 auto;
+}
+
+.procedure-catalog__header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 40px;
+}
+
+.procedure-catalog__eyebrow {
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.procedure-catalog__header h2 {
+  margin: 10px 0 0;
+  font-size: clamp(28px, 4vw, 42px);
+}
+
+.procedure-catalog__header p {
+  max-width: 420px;
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+.procedure-catalog__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.procedure-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 260px;
+  padding: 28px;
+  color: inherit;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.procedure-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-primary);
+}
+
+.procedure-card__category {
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.procedure-card h3 {
+  margin: 16px 0 10px;
+  font-size: 22px;
+}
+
+.procedure-card p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.procedure-card__deadline {
+  margin-top: 20px;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.procedure-card__link {
+  margin-top: auto;
+  padding-top: 24px;
+  color: var(--color-primary);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+@media (max-width: 700px) {
+  .procedure-catalog {
+    padding: 60px 16px;
+  }
+
+  .procedure-catalog__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .procedure-catalog__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .procedure-card {
+    min-height: 220px;
+    padding: 22px;
+  }
+}

@@ -4,13 +4,15 @@ import type { Category } from "../../../data/categories";
 
 interface CategoryCardProps {
   category: Category;
+  onSelect: (categoryId: string) => void;
 }
 
-const CategoryCard = ({ category }: CategoryCardProps) => {
+const CategoryCard = ({ category, onSelect }: CategoryCardProps) => {
   return (
-    <a
-      href={category.href}
+    <button
+      type="button"
       className="category-card"
+      onClick={() => onSelect(category.id)}
       aria-label={`${category.title}: ${category.description}`}
     >
       <div className="category-card__icon" aria-hidden="true">
@@ -26,7 +28,7 @@ const CategoryCard = ({ category }: CategoryCardProps) => {
       <span className="category-card__arrow" aria-hidden="true">
         →
       </span>
-    </a>
+    </button>
   );
 };
 

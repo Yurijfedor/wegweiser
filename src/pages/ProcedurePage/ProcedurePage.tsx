@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 
-import { wohnsitzAnmelden } from "../../data/procedures";
+import { getProcedureById } from "../../data/procedures";
 
 import { Header, Footer } from "../../components/layout";
 
@@ -12,8 +12,7 @@ const ProcedurePage = () => {
   const { procedureId } = useParams();
 
   // Тимчасово підтримуємо першу процедуру.
-  const procedure =
-    procedureId === wohnsitzAnmelden.id ? wohnsitzAnmelden : null;
+  const procedure = procedureId ? getProcedureById(procedureId) : undefined;
 
   if (!procedure) {
     return (

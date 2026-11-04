@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { Procedure } from "../../../types/procedure";
 
@@ -9,9 +9,27 @@ interface ChecklistProps {
 }
 
 const Checklist = ({ procedure }: ChecklistProps) => {
+  const storageKey = `wegweiser-checklist-${procedure.id}`;
+
   const [completedItems, setCompletedItems] = useState<Record<string, boolean>>(
-    {},
+    () => {
+      try {
+        const savedProgress = localStorage.getItem(storageKey);
+
+        return savedProgress ? JSON.parse(savedProgress) : {};
+      } catch {
+        return {};
+      }
+    },
   );
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(completedItems));
+    } catch (error) {
+      console.error("Failed to save checklist progress:", error);
+    }
+  }, [storageKey, completedItems]);
 
   const totalItems = procedure.steps.reduce(
     (total, step) => total + 1 + step.documents.length,

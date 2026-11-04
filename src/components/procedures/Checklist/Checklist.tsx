@@ -78,6 +78,16 @@ const Checklist = ({ procedure }: ChecklistProps) => {
     }));
   };
 
+  const resetProgress = () => {
+    const shouldReset = window.confirm(
+      "Möchtest du deinen Fortschritt wirklich zurücksetzen?",
+    );
+
+    if (shouldReset) {
+      setCompletedItems({});
+    }
+  };
+
   return (
     <section className="checklist">
       <div className="checklist__header">
@@ -111,53 +121,78 @@ const Checklist = ({ procedure }: ChecklistProps) => {
       </p>
 
       <div className="checklist__steps">
-        {procedure.steps.map((step, index) => (
-          <article className="checklist-step" key={step.id}>
-            <label className="checklist-step__heading">
-              <input
-                type="checkbox"
-                checked={
-                  step.documents.length > 0
-                    ? step.documents.every((document) =>
-                        Boolean(completedItems[document.id]),
-                      )
-                    : Boolean(completedItems[step.id])
-                }
-                onChange={(event) => toggleStep(step.id, event.target.checked)}
-              />
+        {procedure.steps.map((step, index) => {
+          const isStepCompleted =
+            step.documents.length > 0
+              ? step.documents.every((document) =>
+                  Boolean(completedItems[document.id]),
+                )
+              : Boolean(completedItems[step.id]);
 
-              <span className="checklist-step__number">{index + 1}</span>
+          return (
+            <article
+              className={`checklist-step${
+                isStepCompleted ? " checklist-step--completed" : ""
+              }`}
+              key={step.id}
+            >
+              <label className="checklist-step__heading">
+                <input
+                  type="checkbox"
+                  checked={
+                    step.documents.length > 0
+                      ? step.documents.every((document) =>
+                          Boolean(completedItems[document.id]),
+                        )
+                      : Boolean(completedItems[step.id])
+                  }
+                  onChange={(event) =>
+                    toggleStep(step.id, event.target.checked)
+                  }
+                />
 
-              <span className="checklist-step__title">{step.title}</span>
-            </label>
+                <span className="checklist-step__number">{index + 1}</span>
 
-            <p className="checklist-step__description">{step.description}</p>
+                <span className="checklist-step__title">{step.title}</span>
+              </label>
 
-            {step.documents.length > 0 && (
-              <div className="checklist-step__documents">
-                {step.documents.map((document) => (
-                  <label className="checklist-document" key={document.id}>
-                    <input
-                      type="checkbox"
-                      checked={Boolean(completedItems[document.id])}
-                      onChange={() => toggleDocument(document.id)}
-                    />
+              <p className="checklist-step__description">{step.description}</p>
 
-                    <span className="checklist-document__content">
-                      <strong>{document.title}</strong>
+              {step.documents.length > 0 && (
+                <div className="checklist-step__documents">
+                  {step.documents.map((document) => (
+                    <label className="checklist-document" key={document.id}>
+                      <input
+                        type="checkbox"
+                        checked={Boolean(completedItems[document.id])}
+                        onChange={() => toggleDocument(document.id)}
+                      />
 
-                      <span>{document.description}</span>
+                      <span className="checklist-document__content">
+                        <strong>{document.title}</strong>
 
-                      {document.condition && (
-                        <small>{document.condition}</small>
-                      )}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            )}
-          </article>
-        ))}
+                        <span>{document.description}</span>
+
+                        {document.condition && (
+                          <small>{document.condition}</small>
+                        )}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              )}
+            </article>
+          );
+        })}
+      </div>
+      <div className="checklist__actions">
+        <button
+          className="checklist__reset-button"
+          type="button"
+          onClick={resetProgress}
+        >
+          Fortschritt zurücksetzen
+        </button>
       </div>
     </section>
   );

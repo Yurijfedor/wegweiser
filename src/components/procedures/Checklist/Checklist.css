@@ -160,3 +160,32 @@
     margin-left: 0;
   }
 }
+
+.checklist-step--completed .checklist-step__title {
+  color: var(--color-primary);
+}
+
+.checklist-step--completed .checklist-step__number {
+  background: var(--color-primary);
+  color: var(--color-surface);
+}
+
+.checklist__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.checklist__reset-button {
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--color-text);
+  cursor: pointer;
+  font: inherit;
+}
+
+.checklist__reset-button:hover {
+  background: var(--color-background);
+}

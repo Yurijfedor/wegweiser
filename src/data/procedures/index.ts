@@ -1,6 +1,10 @@
 import { kindergeldBeantragen, kitaPlatzBeantragen } from "./familie";
 import { wohnsitzAnmelden, wohnungKuendigen } from "./wohnen";
 import { arbeitAufnehmen, arbeitslosMelden } from "./arbeit";
+import {
+  meldebescheinigungBeantragen,
+  aufenthaltstitelBeantragen,
+} from "./dokumente";
 
 import type { Procedure } from "../../types/procedure";
 
@@ -11,6 +15,8 @@ export const procedures: Procedure[] = [
   kitaPlatzBeantragen,
   arbeitAufnehmen,
   arbeitslosMelden,
+  meldebescheinigungBeantragen,
+  aufenthaltstitelBeantragen,
 ];
 
 export const getProcedureById = (id: string) =>
@@ -23,4 +29,6 @@ export {
   kitaPlatzBeantragen,
   arbeitAufnehmen,
   arbeitslosMelden,
+  meldebescheinigungBeantragen,
+  aufenthaltstitelBeantragen,
 };

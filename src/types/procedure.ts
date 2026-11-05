@@ -21,20 +21,24 @@ export interface ProcedureSource {
 
 export interface ProcedureAuthority {
   name: string;
-  address: string;
-  phone: string;
-  email: string;
-  website: string;
+  address?: string;
+  phone?: string;
+  email?: string;
+  website?: string;
 }
 
 export interface Procedure {
   id: string;
   categoryId: string;
+
   title: string;
   description: string;
+
   region: string;
   deadline?: string;
+
   authority?: ProcedureAuthority;
   sources?: ProcedureSource[];
+
   steps: ProcedureStep[];
 }

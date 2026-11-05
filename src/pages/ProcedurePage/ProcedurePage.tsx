@@ -61,17 +61,23 @@ const ProcedurePage = () => {
 
               <h3>{procedure.authority.name}</h3>
 
-              <p>{procedure.authority.address}</p>
-              <p>{procedure.authority.phone}</p>
-              <p>{procedure.authority.email}</p>
+              {procedure.authority.address && (
+                <p>{procedure.authority.address}</p>
+              )}
 
-              <a
-                href={procedure.authority.website}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Zur offiziellen Website →
-              </a>
+              {procedure.authority.phone && <p>{procedure.authority.phone}</p>}
+
+              {procedure.authority.email && <p>{procedure.authority.email}</p>}
+
+              {procedure.authority.website && (
+                <a
+                  href={procedure.authority.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Zur offiziellen Website →
+                </a>
+              )}
             </section>
           )}
 

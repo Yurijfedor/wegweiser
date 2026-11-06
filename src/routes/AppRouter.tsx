@@ -4,7 +4,7 @@ import { HomePage, ProcedurePage } from "../pages";
 
 const AppRouter = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/verfahren/:procedureId" element={<ProcedurePage />} />

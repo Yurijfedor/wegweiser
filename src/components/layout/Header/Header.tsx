@@ -5,6 +5,7 @@ import "./Header.css";
 const Header = () => {
   const { pathname } = useLocation();
   const isHomePage = pathname === "/";
+  const baseUrl = import.meta.env.BASE_URL;
 
   return (
     <header className="header">
@@ -14,9 +15,9 @@ const Header = () => {
         </Link>
 
         <nav className="header__nav" aria-label="Hauptnavigation">
-          <a href="/#ablauf">So funktioniert's</a>
-          <a href="/#themen">Themen</a>
-          <a href="/#ueber-uns">Über uns</a>
+          <a href={`${baseUrl}#ablauf`}>So funktioniert's</a>
+          <a href={`${baseUrl}#themen`}>Themen</a>
+          <a href={`${baseUrl}#ueber-uns`}>Über uns</a>
         </nav>
 
         {isHomePage ? (
@@ -24,7 +25,7 @@ const Header = () => {
             Jetzt starten
           </a>
         ) : (
-          <a href="/#themen" className="header__cta">
+          <a href={`${baseUrl}#themen`} className="header__cta">
             Alle Themen
           </a>
         )}

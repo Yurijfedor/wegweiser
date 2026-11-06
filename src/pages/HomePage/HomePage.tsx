@@ -1,7 +1,12 @@
 import { useState } from "react";
 
 import { Header, Footer } from "../../components/layout";
-import { Hero, Categories } from "../../components/home";
+import {
+  Hero,
+  Categories,
+  CitySelector,
+  HowItWorks,
+} from "../../components/home";
 import { ProcedureCatalog } from "../../components/procedures";
 
 import "./HomePage.css";
@@ -24,6 +29,10 @@ const HomePage = () => {
 
       <main>
         <Hero />
+
+        <HowItWorks />
+
+        <CitySelector />
 
         <Categories onCategorySelect={handleCategorySelect} />
 

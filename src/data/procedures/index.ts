@@ -5,6 +5,7 @@ import {
   meldebescheinigungBeantragen,
   aufenthaltstitelBeantragen,
 } from "./dokumente";
+import { grundsicherungsgeldBeantragen, wohngeldBeantragen } from "./finanzen";
 
 import type { Procedure } from "../../types/procedure";
 
@@ -17,6 +18,8 @@ export const procedures: Procedure[] = [
   arbeitslosMelden,
   meldebescheinigungBeantragen,
   aufenthaltstitelBeantragen,
+  grundsicherungsgeldBeantragen,
+  wohngeldBeantragen,
 ];
 
 export const getProcedureById = (id: string) =>
@@ -31,4 +34,6 @@ export {
   arbeitslosMelden,
   meldebescheinigungBeantragen,
   aufenthaltstitelBeantragen,
+  grundsicherungsgeldBeantragen,
+  wohngeldBeantragen,
 };

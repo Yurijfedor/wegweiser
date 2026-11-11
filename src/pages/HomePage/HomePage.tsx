@@ -8,6 +8,7 @@ import {
   HowItWorks,
 } from "../../components/home";
 import { ProcedureCatalog } from "../../components/procedures";
+import { ProcedureAssistant } from "../../components/assistant";
 
 import "./HomePage.css";
 
@@ -31,6 +32,8 @@ const HomePage = () => {
         <Hero />
 
         <HowItWorks />
+
+        <ProcedureAssistant />
 
         <CitySelector />
 

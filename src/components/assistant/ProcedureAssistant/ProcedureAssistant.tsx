@@ -10,7 +10,10 @@ const ProcedureAssistant = () => {
   const [language, setLanguage] = useState("uk");
   const [message, setMessage] = useState("");
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [response, setResponse] = useState<string | null>(null);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const request: AssistantRequest = {
@@ -22,8 +25,32 @@ const ProcedureAssistant = () => {
       language,
     };
 
-    // Тимчасово: перевіряємо сформований контракт.
-    console.log("Assistant request:", request);
+    try {
+      setIsLoading(true);
+      setResponse(null);
+
+      const apiResponse = await fetch("http://localhost:3001/api/assistant", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(request),
+      });
+
+      if (!apiResponse.ok) {
+        throw new Error("Failed to send request");
+      }
+
+      const data = await apiResponse.json();
+
+      console.log("Assistant response:", data);
+      setResponse(data.message);
+    } catch (error) {
+      console.error("Assistant request failed:", error);
+      setResponse("Etwas ist schiefgelaufen. Bitte versuche es erneut.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const isSubmitDisabled = !message.trim();
@@ -98,13 +125,16 @@ const ProcedureAssistant = () => {
             <button
               type="submit"
               className="procedure-assistant__submit"
-              disabled={isSubmitDisabled}
+              disabled={isSubmitDisabled || isLoading}
             >
-              Hilfe finden
-              <span aria-hidden="true">→</span>
+              {isLoading ? "Suche läuft..." : "Hilfe finden"}
+              {!isLoading && <span aria-hidden="true">→</span>}
             </button>
           </div>
         </form>
+        {response && (
+          <div className="procedure-assistant__response">{response}</div>
+        )}
       </div>
     </section>
   );

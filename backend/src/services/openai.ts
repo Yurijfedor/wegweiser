@@ -1,0 +1,78 @@
+import OpenAI from "openai";
+import type { ProcedureMatch } from "../types/assistant";
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+export const getAssistantResponse = async (
+  message: string,
+  language: string,
+): Promise<ProcedureMatch> => {
+  const response = await openai.responses.create({
+    model: "gpt-5.4-mini",
+    input: [
+      {
+        role: "system",
+        content: `
+        You are the AI assistant for Wegweiser.
+
+        Your task is to understand the user's request and determine whether it matches one of the available administrative procedures.
+
+        Available procedures:
+        - kindergeld-beantragen: Applying for Kindergeld
+        - anmeldung-wohnsitz: Registering a residence
+        - aufenthaltstitel-beantragen: Applying for or extending a residence permit
+
+        Return ONLY valid JSON.
+        Do not use Markdown.
+        Do not add any text outside the JSON.
+        Do not invent procedure IDs.
+
+        If the user's request clearly matches one procedure, return:
+        {
+        "status": "matched",
+        "language": "<user language>",
+        "procedureId": "<existing procedure ID>",
+        "confidence": <number between 0 and 1>
+        }
+
+        If the request is ambiguous or there is not enough information to determine the procedure, return:
+        {
+        "status": "clarification_needed",
+        "language": "<user language>",
+        "message": "<short message in the user's language>",
+        "questions": [
+            {
+            "id": "<question ID>",
+            "question": "<clarifying question in the user's language>",
+            "type": "single_choice",
+            "options": ["<option 1>", "<option 2>"]
+            }
+        ]
+        }
+
+        If the request does not match any available procedure, return:
+        {
+        "status": "not_supported",
+        "language": "<user language>",
+        "message": "<short helpful message in the user's language>"
+        }
+        `,
+      },
+      {
+        role: "user",
+        content: `
+User language: ${language}
+User request: ${message}
+        `,
+      },
+    ],
+  });
+
+  try {
+    return JSON.parse(response.output_text) as ProcedureMatch;
+  } catch {
+    throw new Error("OpenAI returned an invalid JSON response");
+  }
+};

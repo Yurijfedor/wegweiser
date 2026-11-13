@@ -1,8 +1,6 @@
+import "dotenv/config";
 import cors from "cors";
-import dotenv from "dotenv";
 import express from "express";
-
-dotenv.config();
 
 import assistantRouter from "./routes/assistant";
 

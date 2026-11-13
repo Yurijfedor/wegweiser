@@ -1,17 +1,46 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import type { AssistantRequest } from "../../../types/assistant";
+import type {
+  AssistantRequest,
+  ProcedureMatch,
+} from "../../../types/assistant";
 
 import "./ProcedureAssistant.css";
 
 const ProcedureAssistant = () => {
+  const navigate = useNavigate();
+
   const [countryCode, setCountryCode] = useState("DE");
   const [city, setCity] = useState("Mayen");
   const [language, setLanguage] = useState("uk");
   const [message, setMessage] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
-  const [response, setResponse] = useState<string | null>(null);
+  const [response, setResponse] = useState<ProcedureMatch | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const sendAssistantRequest = async (
+    request: AssistantRequest,
+  ): Promise<ProcedureMatch> => {
+    const apiResponse = await fetch("http://localhost:3001/api/assistant", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(request),
+    });
+
+    if (!apiResponse.ok) {
+      throw new Error("Failed to send request");
+    }
+
+    const data = await apiResponse.json();
+
+    console.log("Assistant response:", data);
+
+    return data as ProcedureMatch;
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -28,6 +57,7 @@ const ProcedureAssistant = () => {
     try {
       setIsLoading(true);
       setResponse(null);
+      setError(null);
 
       const apiResponse = await fetch("http://localhost:3001/api/assistant", {
         method: "POST",
@@ -44,10 +74,49 @@ const ProcedureAssistant = () => {
       const data = await apiResponse.json();
 
       console.log("Assistant response:", data);
-      setResponse(data.message);
+      if (data.status === "matched" && data.procedureId) {
+        navigate(`/verfahren/${data.procedureId}`);
+        return;
+      }
+
+      setResponse(data);
     } catch (error) {
       console.error("Assistant request failed:", error);
-      setResponse("Etwas ist schiefgelaufen. Bitte versuche es erneut.");
+      setError("Etwas ist schiefgelaufen. Bitte versuche es erneut.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleClarificationAnswer = async (answer: string) => {
+    const request: AssistantRequest = {
+      message: answer,
+      location: {
+        countryCode,
+        city,
+      },
+      language,
+    };
+
+    try {
+      setIsLoading(true);
+      setResponse(null);
+      setError(null);
+
+      const assistantResponse = await sendAssistantRequest(request);
+
+      if (
+        assistantResponse.status === "matched" &&
+        assistantResponse.procedureId
+      ) {
+        navigate(`/verfahren/${assistantResponse.procedureId}`);
+        return;
+      }
+
+      setResponse(assistantResponse);
+    } catch (error) {
+      console.error("Clarification request failed:", error);
+      setError("Etwas ist schiefgelaufen. Bitte versuche es erneut.");
     } finally {
       setIsLoading(false);
     }
@@ -132,9 +201,41 @@ const ProcedureAssistant = () => {
             </button>
           </div>
         </form>
-        {response && (
-          <div className="procedure-assistant__response">{response}</div>
+        {response?.status === "clarification_needed" && (
+          <div className="procedure-assistant__response">
+            {response.message && (
+              <p className="procedure-assistant__response-message">
+                {response.message}
+              </p>
+            )}
+
+            {response.questions?.map((question) => (
+              <div key={question.id} className="procedure-assistant__question">
+                <p className="procedure-assistant__question-text">
+                  {question.question}
+                </p>
+
+                {question.type === "single_choice" && (
+                  <div className="procedure-assistant__options">
+                    {question.options.map((option) => (
+                      <button
+                        key={option}
+                        type="button"
+                        className="procedure-assistant__option"
+                        onClick={() => handleClarificationAnswer(option)}
+                        disabled={isLoading}
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         )}
+
+        {error && <div className="procedure-assistant__response">{error}</div>}
       </div>
     </section>
   );

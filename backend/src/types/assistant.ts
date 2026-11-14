@@ -16,6 +16,11 @@ export interface ProcedureMatch {
   questions?: ClarificationQuestion[];
 }
 
+export interface ConversationMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
 export type ClarificationQuestion =
   | {
       id: string;

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import type {
   AssistantRequest,
+  ConversationMessage,
   ProcedureMatch,
 } from "../../../types/assistant";
 
@@ -19,6 +20,7 @@ const ProcedureAssistant = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState<ProcedureMatch | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [conversation, setConversation] = useState<ConversationMessage[]>([]);
 
   const sendAssistantRequest = async (
     request: AssistantRequest,
@@ -45,6 +47,15 @@ const ProcedureAssistant = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    const newConversation: ConversationMessage[] = [
+      {
+        role: "user",
+        content: message.trim(),
+      },
+    ];
+
+    setConversation(newConversation);
+
     const request: AssistantRequest = {
       message: message.trim(),
       location: {
@@ -52,6 +63,7 @@ const ProcedureAssistant = () => {
         city,
       },
       language,
+      conversation: newConversation,
     };
 
     try {
@@ -71,12 +83,23 @@ const ProcedureAssistant = () => {
         throw new Error("Failed to send request");
       }
 
-      const data = await apiResponse.json();
+      const data = (await apiResponse.json()) as ProcedureMatch;
 
       console.log("Assistant response:", data);
+
       if (data.status === "matched" && data.procedureId) {
         navigate(`/verfahren/${data.procedureId}`);
         return;
+      }
+
+      if (data.status === "clarification_needed") {
+        const assistantMessages: ConversationMessage[] =
+          data.questions?.map((question) => ({
+            role: "assistant",
+            content: question.question,
+          })) ?? [];
+
+        setConversation([...newConversation, ...assistantMessages]);
       }
 
       setResponse(data);
@@ -89,6 +112,14 @@ const ProcedureAssistant = () => {
   };
 
   const handleClarificationAnswer = async (answer: string) => {
+    const updatedConversation: ConversationMessage[] = [
+      ...conversation,
+      {
+        role: "user",
+        content: answer,
+      },
+    ];
+
     const request: AssistantRequest = {
       message: answer,
       location: {
@@ -96,12 +127,15 @@ const ProcedureAssistant = () => {
         city,
       },
       language,
+      conversation: updatedConversation,
     };
 
     try {
       setIsLoading(true);
       setResponse(null);
       setError(null);
+
+      setConversation(updatedConversation);
 
       const assistantResponse = await sendAssistantRequest(request);
 

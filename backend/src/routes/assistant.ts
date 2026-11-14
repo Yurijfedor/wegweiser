@@ -5,7 +5,7 @@ import { getAssistantResponse } from "../services/openai";
 const router = Router();
 
 router.post("/", async (request, response) => {
-  const { message, location, language } = request.body;
+  const { message, location, language, conversation } = request.body;
 
   if (!message || typeof message !== "string" || !message.trim()) {
     return response.status(400).json({
@@ -28,8 +28,8 @@ router.post("/", async (request, response) => {
   // Тимчасова відповідь для перевірки API.
   try {
     const assistantResponse = await getAssistantResponse(
-      message.trim(),
       language,
+      conversation,
     );
 
     return response.json(assistantResponse);

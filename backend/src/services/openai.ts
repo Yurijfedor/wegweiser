@@ -1,13 +1,20 @@
 import OpenAI from "openai";
-import type { ProcedureMatch } from "../types/assistant";
+
+import { availableProcedures } from "../data/procedures";
+
+import type { ConversationMessage, ProcedureMatch } from "../types/assistant";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+const proceduresPrompt = availableProcedures
+  .map((procedure) => `- ${procedure.id}: ${procedure.description}`)
+  .join("\n");
+
 export const getAssistantResponse = async (
-  message: string,
   language: string,
+  conversation: ConversationMessage[] = [],
 ): Promise<ProcedureMatch> => {
   const response = await openai.responses.create({
     model: "gpt-5.4-mini",
@@ -20,9 +27,7 @@ export const getAssistantResponse = async (
         Your task is to understand the user's request and determine whether it matches one of the available administrative procedures.
 
         Available procedures:
-        - kindergeld-beantragen: Applying for Kindergeld
-        - anmeldung-wohnsitz: Registering a residence
-        - aufenthaltstitel-beantragen: Applying for or extending a residence permit
+        ${proceduresPrompt}
 
         Return ONLY valid JSON.
         Do not use Markdown.
@@ -60,13 +65,7 @@ export const getAssistantResponse = async (
         }
         `,
       },
-      {
-        role: "user",
-        content: `
-User language: ${language}
-User request: ${message}
-        `,
-      },
+      ...conversation,
     ],
   });
 

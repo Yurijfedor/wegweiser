@@ -5,10 +5,16 @@ export interface LocationContext {
   city: string;
 }
 
+export interface ConversationMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
 export interface AssistantRequest {
   message: string;
   location: LocationContext;
   language: string;
+  conversation?: ConversationMessage[];
 }
 
 export type QuestionType = "single_choice" | "text";

@@ -47,17 +47,17 @@ const ProcedureAssistant = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    const userMessage = message.trim();
+
     const newConversation: ConversationMessage[] = [
       {
         role: "user",
-        content: message.trim(),
+        content: userMessage,
       },
     ];
 
-    setConversation(newConversation);
-
     const request: AssistantRequest = {
-      message: message.trim(),
+      message: userMessage,
       location: {
         countryCode,
         city,
@@ -71,38 +71,38 @@ const ProcedureAssistant = () => {
       setResponse(null);
       setError(null);
 
-      const apiResponse = await fetch("http://localhost:3001/api/assistant", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(request),
-      });
+      setConversation(newConversation);
 
-      if (!apiResponse.ok) {
-        throw new Error("Failed to send request");
-      }
+      const assistantResponse = await sendAssistantRequest(request);
 
-      const data = (await apiResponse.json()) as ProcedureMatch;
-
-      console.log("Assistant response:", data);
-
-      if (data.status === "matched" && data.procedureId) {
-        navigate(`/verfahren/${data.procedureId}`);
+      if (
+        assistantResponse.status === "matched" &&
+        assistantResponse.procedureId
+      ) {
+        navigate(`/verfahren/${assistantResponse.procedureId}`);
         return;
       }
 
-      if (data.status === "clarification_needed") {
-        const assistantMessages: ConversationMessage[] =
-          data.questions?.map((question) => ({
-            role: "assistant",
+      if (assistantResponse.status === "clarification_needed") {
+        const assistantMessages: ConversationMessage[] = [
+          ...(assistantResponse.message
+            ? [
+                {
+                  role: "assistant" as const,
+                  content: assistantResponse.message,
+                },
+              ]
+            : []),
+          ...(assistantResponse.questions?.map((question) => ({
+            role: "assistant" as const,
             content: question.question,
-          })) ?? [];
+          })) ?? []),
+        ];
 
         setConversation([...newConversation, ...assistantMessages]);
       }
 
-      setResponse(data);
+      setResponse(assistantResponse);
     } catch (error) {
       console.error("Assistant request failed:", error);
       setError("Etwas ist schiefgelaufen. Bitte versuche es erneut.");
@@ -145,6 +145,25 @@ const ProcedureAssistant = () => {
       ) {
         navigate(`/verfahren/${assistantResponse.procedureId}`);
         return;
+      }
+
+      if (assistantResponse.status === "clarification_needed") {
+        const assistantMessages: ConversationMessage[] = [
+          ...(assistantResponse.message
+            ? [
+                {
+                  role: "assistant" as const,
+                  content: assistantResponse.message,
+                },
+              ]
+            : []),
+          ...(assistantResponse.questions?.map((question) => ({
+            role: "assistant" as const,
+            content: question.question,
+          })) ?? []),
+        ];
+
+        setConversation([...updatedConversation, ...assistantMessages]);
       }
 
       setResponse(assistantResponse);

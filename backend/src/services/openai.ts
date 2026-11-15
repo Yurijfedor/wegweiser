@@ -34,6 +34,14 @@ export const getAssistantResponse = async (
         Do not add any text outside the JSON.
         Do not invent procedure IDs.
 
+        Use the full conversation history to understand the user's situation.
+
+        Do not guess a procedure when the available information is still ambiguous.
+
+        If the user's latest answer does not provide enough information to identify one specific procedure, ask another clarifying question.
+
+        Only return "matched" when you have enough information to confidently identify one available procedure.
+
         If the user's request clearly matches one procedure, return:
         {
         "status": "matched",

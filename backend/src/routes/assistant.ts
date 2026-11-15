@@ -27,9 +27,19 @@ router.post("/", async (request, response) => {
 
   // Тимчасова відповідь для перевірки API.
   try {
+    const conversationHistory =
+      Array.isArray(conversation) && conversation.length > 0
+        ? conversation
+        : [
+            {
+              role: "user" as const,
+              content: message.trim(),
+            },
+          ];
+
     const assistantResponse = await getAssistantResponse(
       language,
-      conversation,
+      conversationHistory,
     );
 
     return response.json(assistantResponse);

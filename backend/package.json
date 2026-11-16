@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "start": "tsx src/index.ts"
+    "start": "tsx src/index.ts",
+    "validate:procedures": "tsx scripts/validate-procedures.ts",
+    "test:procedure-validator": "tsx scripts/test-procedure-validator.ts"
   },
   "keywords": [],
   "author": "",

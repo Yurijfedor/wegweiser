@@ -7,7 +7,10 @@ import {
   meldebescheinigungBeantragen,
   aufenthaltstitelBeantragen,
 } from "./dokumente.js";
-import { grundsicherungsgeldBeantragen, wohngeldBeantragen } from "./finanzen.js";
+import {
+  grundsicherungsgeldBeantragen,
+  wohngeldBeantragen,
+} from "./finanzen.js";
 import { fuehrerscheinUmschreiben, hundAnmelden } from "./alltag.js";
 
 export const procedures: Procedure[] = [
@@ -50,3 +53,6 @@ export type {
   ProcedureSource,
   ProcedureAuthority,
 } from "./types.js";
+
+export { validateProcedures } from "./validate.js";
+export type { ValidationError } from "./validate.js";

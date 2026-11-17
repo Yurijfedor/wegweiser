@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run validate:procedures && tsc -b && vite build",
+    "build": "npm run check:backend && tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "validate:procedures": "npm --prefix backend run validate:procedures",
-    "test:procedure-validator": "npm --prefix backend run test:procedure-validator"
+    "test:procedure-validator": "npm --prefix backend run test:procedure-validator",
+    "check:backend": "npm --prefix backend run check"
   },
   "dependencies": {
     "react": "^19.3.1",

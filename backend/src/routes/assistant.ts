@@ -2,54 +2,66 @@ import { Router } from "express";
 
 import { getAssistantResponse } from "../services/openai";
 
-const router = Router();
+import type { ConversationMessage, ProcedureMatch } from "../types/assistant";
 
-router.post("/", async (request, response) => {
-  const { message, location, language, conversation } = request.body;
+type AssistantService = (
+  language: string,
+  conversation: ConversationMessage[],
+) => Promise<ProcedureMatch>;
 
-  if (!message || typeof message !== "string" || !message.trim()) {
-    return response.status(400).json({
-      error: "Message is required",
-    });
-  }
+export const createAssistantRouter = (
+  assistantService: AssistantService = getAssistantResponse,
+) => {
+  const router = Router();
 
-  if (!location?.countryCode || !location?.city) {
-    return response.status(400).json({
-      error: "Location is required",
-    });
-  }
+  router.post("/", async (request, response) => {
+    const { message, location, language, conversation } = request.body;
 
-  if (!language) {
-    return response.status(400).json({
-      error: "Language is required",
-    });
-  }
+    if (!message || typeof message !== "string" || !message.trim()) {
+      return response.status(400).json({
+        error: "Message is required",
+      });
+    }
 
-  // Тимчасова відповідь для перевірки API.
-  try {
-    const conversationHistory =
-      Array.isArray(conversation) && conversation.length > 0
-        ? conversation
-        : [
-            {
-              role: "user" as const,
-              content: message.trim(),
-            },
-          ];
+    if (!location?.countryCode || !location?.city) {
+      return response.status(400).json({
+        error: "Location is required",
+      });
+    }
 
-    const assistantResponse = await getAssistantResponse(
-      language,
-      conversationHistory,
-    );
+    if (!language) {
+      return response.status(400).json({
+        error: "Language is required",
+      });
+    }
 
-    return response.json(assistantResponse);
-  } catch (error) {
-    console.error("OpenAI request failed:", error);
+    try {
+      const conversationHistory =
+        Array.isArray(conversation) && conversation.length > 0
+          ? conversation
+          : [
+              {
+                role: "user" as const,
+                content: message.trim(),
+              },
+            ];
 
-    return response.status(500).json({
-      error: "Failed to process assistant request",
-    });
-  }
-});
+      const assistantResponse = await assistantService(
+        language,
+        conversationHistory,
+      );
 
-export default router;
+      return response.json(assistantResponse);
+    } catch (error) {
+      console.error("Assistant request failed:", error);
+
+      return response.status(500).json({
+        error: "Failed to process assistant request",
+      });
+    }
+  });
+
+  return router;
+};
+
+export default createAssistantRouter();

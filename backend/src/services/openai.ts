@@ -1,12 +1,15 @@
 import OpenAI from "openai";
 
 import { availableProcedures } from "../data/procedures";
+import { validateAssistantResponse } from "./validateAssistantResponse";
 
 import type { ConversationMessage, ProcedureMatch } from "../types/assistant";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+const getOpenAIClient = () => {
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+};
 
 const proceduresPrompt = availableProcedures
   .map((procedure) => `- ${procedure.id}: ${procedure.description}`)
@@ -16,6 +19,8 @@ export const getAssistantResponse = async (
   language: string,
   conversation: ConversationMessage[] = [],
 ): Promise<ProcedureMatch> => {
+  const openai = getOpenAIClient();
+
   const response = await openai.responses.create({
     model: "gpt-5.4-mini",
     input: [
@@ -78,7 +83,9 @@ export const getAssistantResponse = async (
   });
 
   try {
-    return JSON.parse(response.output_text) as ProcedureMatch;
+    const parsedResponse: unknown = JSON.parse(response.output_text);
+
+    return validateAssistantResponse(parsedResponse);
   } catch {
     throw new Error("OpenAI returned an invalid JSON response");
   }

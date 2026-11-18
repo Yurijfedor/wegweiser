@@ -9,7 +9,11 @@
     "validate:procedures": "tsx scripts/validate-procedures.ts",
     "test:procedure-validator": "tsx scripts/test-procedure-validator.ts",
     "test:assistant": "tsx scripts/test-assistant-api.ts && tsx scripts/test-assistant-response-validator.ts",
-    "check": "npm run validate:procedures && npm run test:procedure-validator && npm run test:assistant && tsc --noEmit"
+    "check": "npm run validate:procedures && npm run test:procedure-validator && npm run test:assistant && tsc --noEmit",
+    "test:assistant:live": "tsx scripts/test-assistant-live.ts",
+    "test:assistant:clarification:live": "tsx scripts/test-assistant-clarification-live.ts",
+    "test:assistant:unsupported:live": "tsx scripts/test-assistant-unsupported-live.ts",
+    "test:assistant:conversation:live": "tsx scripts/test-assistant-conversation-live.ts"
   },
   "keywords": [],
   "author": "",

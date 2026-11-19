@@ -288,6 +288,22 @@ const ProcedureAssistant = () => {
           </div>
         )}
 
+        {response?.status === "out_of_scope" && (
+          <div className="procedure-assistant__response">
+            <p className="procedure-assistant__response-message">
+              {response.message}
+            </p>
+          </div>
+        )}
+
+        {response?.status === "not_supported" && (
+          <div className="procedure-assistant__response">
+            <p className="procedure-assistant__response-message">
+              {response.message}
+            </p>
+          </div>
+        )}
+
         {error && <div className="procedure-assistant__response">{error}</div>}
       </div>
     </section>

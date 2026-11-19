@@ -3,6 +3,8 @@ import assert from "node:assert/strict";
 import { createApp } from "../src/app";
 import { createAssistantRouter } from "../src/routes/assistant";
 
+import type { IntentClassifier } from "../src/services/assistant/intentClassifier";
+
 import type {
   ConversationMessage,
   ProcedureMatch,
@@ -20,10 +22,13 @@ const runTests = async () => {
 
   let mockError: Error | null = null;
 
+  let assistantServiceCalls = 0;
+
   const mockAssistant = async (
     language: string,
     conversation: ConversationMessage[],
   ) => {
+    assistantServiceCalls++;
     receivedLanguage = language;
     receivedConversation = conversation;
     if (mockError) {
@@ -33,7 +38,23 @@ const runTests = async () => {
     return mockResponse;
   };
 
-  const app = createApp(createAssistantRouter(mockAssistant));
+  let mockIntent: "administrative" | "out_of_scope" | "ambiguous" =
+    "administrative";
+
+  let intentClassifierCalls = 0;
+
+  const mockIntentClassifier: IntentClassifier = async () => {
+    intentClassifierCalls++;
+
+    return {
+      intent: mockIntent,
+      reason: "Mock intent classification",
+    };
+  };
+
+  const app = createApp(
+    createAssistantRouter(mockAssistant, mockIntentClassifier),
+  );
   const server = app.listen(0);
 
   await new Promise<void>((resolve, reject) => {
@@ -250,6 +271,34 @@ const runTests = async () => {
     mockError = null;
 
     console.log("✓ Assistant service error handling");
+
+    // Test 10: Out-of-scope request
+    mockIntent = "out_of_scope";
+
+    const callsBeforeOutOfScope = intentClassifierCalls;
+    const assistantCallsBeforeOutOfScope = assistantServiceCalls;
+
+    const outOfScopeResponse = await fetch(`${baseUrl}/api/assistant`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: "Wo kann ich Pizza kaufen?",
+        location: { countryCode: "DE", city: "Mayen" },
+        language: "de",
+      }),
+    });
+
+    assert.equal(outOfScopeResponse.status, 200);
+
+    const outOfScopeResult = await outOfScopeResponse.json();
+
+    assert.equal(outOfScopeResult.status, "out_of_scope");
+    assert.equal(intentClassifierCalls, callsBeforeOutOfScope + 1);
+    assert.equal(assistantServiceCalls, assistantCallsBeforeOutOfScope);
+
+    console.log("✓ Out-of-scope request stops before assistant service");
+
+    mockIntent = "administrative";
     console.log("\nAll Assistant API tests passed!");
   } finally {
     await new Promise<void>((resolve, reject) => {

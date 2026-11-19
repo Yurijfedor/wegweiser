@@ -11,6 +11,7 @@ const allowedStatuses: ProcedureMatchStatus[] = [
   "clarification_needed",
   "correction_needed",
   "not_supported",
+  "out_of_scope",
 ];
 
 const isRecord = (value: unknown): value is Record<string, unknown> => {
@@ -104,6 +105,16 @@ export const validateAssistantResponse = (input: unknown): ProcedureMatch => {
     }
   } else if (input.questions !== undefined) {
     throw new Error("Questions are only allowed for clarification status");
+  }
+
+  if (input.status === "out_of_scope") {
+    if (typeof input.message !== "string" || !input.message.trim()) {
+      throw new Error("Message is required for out_of_scope status");
+    }
+
+    if (input.procedureId !== undefined) {
+      throw new Error("Procedure ID is not allowed for out_of_scope status");
+    }
   }
 
   return input as unknown as ProcedureMatch;

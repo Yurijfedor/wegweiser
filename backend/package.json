@@ -13,7 +13,8 @@
     "test:assistant:live": "tsx scripts/test-assistant-live.ts",
     "test:assistant:clarification:live": "tsx scripts/test-assistant-clarification-live.ts",
     "test:assistant:unsupported:live": "tsx scripts/test-assistant-unsupported-live.ts",
-    "test:assistant:conversation:live": "tsx scripts/test-assistant-conversation-live.ts"
+    "test:assistant:conversation:live": "tsx scripts/test-assistant-conversation-live.ts",
+    "test:intent-classifier": "tsx scripts/test-intent-classifier.ts"
   },
   "keywords": [],
   "author": "",

@@ -2,7 +2,8 @@ export type ProcedureMatchStatus =
   | "matched"
   | "clarification_needed"
   | "correction_needed"
-  | "not_supported";
+  | "not_supported"
+  | "out_of_scope";
 
 export interface ProcedureMatch {
   status: ProcedureMatchStatus;

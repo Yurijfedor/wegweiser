@@ -44,12 +44,14 @@ const ProcedureAssistant = () => {
     return data as ProcedureMatch;
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const submitAssistantMessage = async (
+    userMessage: string,
+    continueConversation: boolean,
+  ) => {
+    const baseConversation = continueConversation ? conversation : [];
 
-    const userMessage = message.trim();
-
-    const newConversation: ConversationMessage[] = [
+    const updatedConversation: ConversationMessage[] = [
+      ...baseConversation,
       {
         role: "user",
         content: userMessage,
@@ -58,70 +60,6 @@ const ProcedureAssistant = () => {
 
     const request: AssistantRequest = {
       message: userMessage,
-      location: {
-        countryCode,
-        city,
-      },
-      language,
-      conversation: newConversation,
-    };
-
-    try {
-      setIsLoading(true);
-      setResponse(null);
-      setError(null);
-
-      setConversation(newConversation);
-
-      const assistantResponse = await sendAssistantRequest(request);
-
-      if (
-        assistantResponse.status === "matched" &&
-        assistantResponse.procedureId
-      ) {
-        navigate(`/verfahren/${assistantResponse.procedureId}`);
-        return;
-      }
-
-      if (assistantResponse.status === "clarification_needed") {
-        const assistantMessages: ConversationMessage[] = [
-          ...(assistantResponse.message
-            ? [
-                {
-                  role: "assistant" as const,
-                  content: assistantResponse.message,
-                },
-              ]
-            : []),
-          ...(assistantResponse.questions?.map((question) => ({
-            role: "assistant" as const,
-            content: question.question,
-          })) ?? []),
-        ];
-
-        setConversation([...newConversation, ...assistantMessages]);
-      }
-
-      setResponse(assistantResponse);
-    } catch (error) {
-      console.error("Assistant request failed:", error);
-      setError("Etwas ist schiefgelaufen. Bitte versuche es erneut.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleClarificationAnswer = async (answer: string) => {
-    const updatedConversation: ConversationMessage[] = [
-      ...conversation,
-      {
-        role: "user",
-        content: answer,
-      },
-    ];
-
-    const request: AssistantRequest = {
-      message: answer,
       location: {
         countryCode,
         city,
@@ -168,11 +106,27 @@ const ProcedureAssistant = () => {
 
       setResponse(assistantResponse);
     } catch (error) {
-      console.error("Clarification request failed:", error);
+      console.error("Assistant request failed:", error);
       setError("Etwas ist schiefgelaufen. Bitte versuche es erneut.");
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const userMessage = message.trim();
+
+    if (!userMessage) return;
+
+    const continueConversation = response?.status === "clarification_needed";
+
+    await submitAssistantMessage(userMessage, continueConversation);
+  };
+
+  const handleClarificationAnswer = async (answer: string) => {
+    await submitAssistantMessage(answer, true);
   };
 
   const isSubmitDisabled = !message.trim();

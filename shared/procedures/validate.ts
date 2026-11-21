@@ -18,6 +18,28 @@ const isValidUrl = (value: string): boolean => {
   }
 };
 
+const isValidDate = (value: unknown): boolean => {
+  if (typeof value !== "string" || !value.trim()) {
+    return false;
+  }
+
+  const date = new Date(value);
+
+  return !Number.isNaN(date.getTime());
+};
+
+const procedureVerificationStatuses = [
+  "unverified",
+  "verified",
+  "needs_review",
+] as const;
+
+const sourceVerificationStatuses = [
+  "unverified",
+  "verified",
+  "needs_review",
+] as const;
+
 export const validateProcedures = (
   procedures: Procedure[],
 ): ValidationError[] => {
@@ -57,6 +79,63 @@ export const validateProcedures = (
 
     if (!isNonEmptyString(procedure.region)) {
       addError(id, `${prefix}.region`, "Region is required.");
+    }
+
+    if (procedure.verification !== undefined) {
+      const verification = procedure.verification;
+      const verificationPath = `${prefix}.verification`;
+
+      if (!procedureVerificationStatuses.includes(verification.status)) {
+        addError(
+          id,
+          `${verificationPath}.status`,
+          "Invalid procedure verification status.",
+        );
+      }
+
+      if (
+        verification.lastVerifiedAt !== undefined &&
+        !isValidDate(verification.lastVerifiedAt)
+      ) {
+        addError(
+          id,
+          `${verificationPath}.lastVerifiedAt`,
+          "A valid verification date is required.",
+        );
+      }
+
+      if (
+        verification.nextReviewAt !== undefined &&
+        !isValidDate(verification.nextReviewAt)
+      ) {
+        addError(
+          id,
+          `${verificationPath}.nextReviewAt`,
+          "A valid next review date is required.",
+        );
+      }
+
+      if (
+        verification.verifiedBy !== undefined &&
+        !isNonEmptyString(verification.verifiedBy)
+      ) {
+        addError(
+          id,
+          `${verificationPath}.verifiedBy`,
+          "Verified by must not be empty.",
+        );
+      }
+
+      if (
+        verification.reviewNote !== undefined &&
+        typeof verification.reviewNote !== "string"
+      ) {
+        addError(
+          id,
+          `${verificationPath}.reviewNote`,
+          "Review note must be a string.",
+        );
+      }
     }
 
     if (!Array.isArray(procedure.steps) || procedure.steps.length === 0) {
@@ -150,6 +229,52 @@ export const validateProcedures = (
           `${sourcePath}.url`,
           "A valid HTTP or HTTPS URL is required.",
         );
+      }
+
+      if (source.verification !== undefined) {
+        const verification = source.verification;
+        const verificationPath = `${sourcePath}.verification`;
+
+        if (!sourceVerificationStatuses.includes(verification.status)) {
+          addError(
+            id,
+            `${verificationPath}.status`,
+            "Invalid source verification status.",
+          );
+        }
+
+        if (
+          verification.lastCheckedAt !== undefined &&
+          !isValidDate(verification.lastCheckedAt)
+        ) {
+          addError(
+            id,
+            `${verificationPath}.lastCheckedAt`,
+            "A valid source check date is required.",
+          );
+        }
+
+        if (
+          verification.checkedBy !== undefined &&
+          !isNonEmptyString(verification.checkedBy)
+        ) {
+          addError(
+            id,
+            `${verificationPath}.checkedBy`,
+            "Checked by must not be empty.",
+          );
+        }
+
+        if (
+          verification.note !== undefined &&
+          typeof verification.note !== "string"
+        ) {
+          addError(
+            id,
+            `${verificationPath}.note`,
+            "Source verification note must be a string.",
+          );
+        }
       }
     });
 

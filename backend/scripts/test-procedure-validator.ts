@@ -3,23 +3,54 @@ import {
   validateProcedures,
 } from "../../shared/procedures/index.js";
 
-// Створюємо копію першої процедури з навмисною помилкою.
+import type { Procedure } from "../../shared/procedures/index.js";
+
+// Тест 1. Дубльований ID та порожня назва.
 const invalidProcedure = {
   ...procedures[0],
   title: "",
 };
 
-// Додаємо її до каталогу.
-// ID буде дублюватися, а title буде порожнім.
-const errors = validateProcedures([...procedures, invalidProcedure]);
+// Тест 2. Некоректні метадані верифікації.
+const invalidVerificationProcedure = {
+  ...procedures[0],
+  id: "invalid-verification-test",
+  verification: {
+    status: "invalid",
+    lastVerifiedAt: "not-a-date",
+    verifiedBy: " ",
+  },
+  sources: procedures[0].sources?.map((source, index) =>
+    index === 0
+      ? {
+          ...source,
+          verification: {
+            status: "invalid",
+            lastCheckedAt: "not-a-date",
+            checkedBy: " ",
+          },
+        }
+      : source,
+  ),
+} as unknown as Procedure;
 
-const hasDuplicateIdError = errors.some(
-  (error) => error.message === "Duplicate procedure ID.",
-);
+// Запускаємо валідацію.
+const errors = validateProcedures([
+  ...procedures,
+  invalidProcedure,
+  invalidVerificationProcedure,
+]);
 
-const hasMissingTitleError = errors.some(
-  (error) => error.message === "Title is required.",
-);
+const expectedErrors = [
+  "Duplicate procedure ID.",
+  "Title is required.",
+  "Invalid procedure verification status.",
+  "A valid verification date is required.",
+  "Verified by must not be empty.",
+  "Invalid source verification status.",
+  "A valid source check date is required.",
+  "Checked by must not be empty.",
+];
 
 console.log("Testing procedure validator...\n");
 console.log("Detected errors:");
@@ -28,8 +59,14 @@ for (const error of errors) {
   console.log(`[${error.procedureId}] ${error.path}: ${error.message}`);
 }
 
-if (!hasDuplicateIdError || !hasMissingTitleError) {
-  throw new Error("Validator did not detect all expected errors.");
+const missingErrors = expectedErrors.filter(
+  (message) => !errors.some((error) => error.message === message),
+);
+
+if (missingErrors.length > 0) {
+  throw new Error(
+    `Validator did not detect expected errors: ${missingErrors.join(", ")}`,
+  );
 }
 
-console.log("\nSuccess! Validator detected both expected errors.");
+console.log("\nSuccess! All expected validation errors were detected.");

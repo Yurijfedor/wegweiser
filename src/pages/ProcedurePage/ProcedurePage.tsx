@@ -29,6 +29,10 @@ const ProcedurePage = () => {
     );
   }
 
+  const verification = procedure.verification ?? {
+    status: "unverified" as const,
+  };
+
   return (
     <>
       <Header />
@@ -53,6 +57,42 @@ const ProcedurePage = () => {
             )}
           </div>
 
+          <section className="procedure-page__verification">
+            <div className="procedure-page__verification-header">
+              <span>Status der Informationen</span>
+
+              <span
+                className={`procedure-page__verification-badge procedure-page__verification-badge--${verification.status}`}
+              >
+                {verification.status === "verified"
+                  ? "Verified"
+                  : verification.status === "needs_review"
+                    ? "Needs Review"
+                    : "Unverified"}
+              </span>
+            </div>
+
+            {verification.status === "verified" &&
+              verification.lastVerifiedAt && (
+                <p>
+                  Zuletzt geprüft:{" "}
+                  {new Date(verification.lastVerifiedAt).toLocaleDateString(
+                    "de-DE",
+                  )}
+                </p>
+              )}
+
+            {verification.status === "unverified" && (
+              <p>
+                Diese Informationen wurden noch nicht vollständig überprüft.
+              </p>
+            )}
+
+            {verification.status === "needs_review" && (
+              <p>Diese Informationen müssen erneut überprüft werden.</p>
+            )}
+          </section>
+
           <Checklist procedure={procedure} />
 
           {procedure.authority && (
@@ -62,12 +102,30 @@ const ProcedurePage = () => {
               <h3>{procedure.authority.name}</h3>
 
               {procedure.authority.address && (
-                <p>{procedure.authority.address}</p>
+                <p className="procedure-page__contact">
+                  <strong>Adresse:</strong> {procedure.authority.address}
+                </p>
               )}
 
-              {procedure.authority.phone && <p>{procedure.authority.phone}</p>}
+              {procedure.authority.phone && (
+                <p className="procedure-page__contact">
+                  <strong>Telefon:</strong>{" "}
+                  <a
+                    href={`tel:${procedure.authority.phone.replace(/[^\d+]/g, "")}`}
+                  >
+                    {procedure.authority.phone}
+                  </a>
+                </p>
+              )}
 
-              {procedure.authority.email && <p>{procedure.authority.email}</p>}
+              {procedure.authority.email && (
+                <p className="procedure-page__contact">
+                  <strong>E-Mail:</strong>{" "}
+                  <a href={`mailto:${procedure.authority.email}`}>
+                    {procedure.authority.email}
+                  </a>
+                </p>
+              )}
 
               {procedure.authority.website && (
                 <a
@@ -80,7 +138,6 @@ const ProcedurePage = () => {
               )}
             </section>
           )}
-
           {procedure.sources && (
             <section className="procedure-page__sources">
               <h2>Offizielle Informationen</h2>

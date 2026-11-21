@@ -22,6 +22,59 @@
   border-bottom: 1px solid var(--color-border);
 }
 
+.procedure-page__verification {
+  display: grid;
+  gap: 12px;
+  margin-top: 28px;
+  padding: 20px 24px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.procedure-page__verification-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.procedure-page__verification-header > span:first-child {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.procedure-page__verification-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.procedure-page__verification-badge--verified {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.procedure-page__verification-badge--unverified {
+  color: #92400e;
+  background: #fef3c7;
+}
+
+.procedure-page__verification-badge--needs_review {
+  color: #991b1b;
+  background: #fee2e2;
+}
+
+.procedure-page__verification > p {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
 .procedure-page__eyebrow {
   color: var(--color-primary);
   font-size: 12px;
@@ -188,5 +241,15 @@
 
   .procedure-page__authority {
     padding: 22px;
+  }
+
+  .procedure-page__verification {
+    padding: 18px;
+  }
+
+  .procedure-page__verification-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
   }
 }

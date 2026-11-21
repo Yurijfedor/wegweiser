@@ -8,6 +8,7 @@
     "start": "tsx src/index.ts",
     "validate:procedures": "tsx scripts/validate-procedures.ts",
     "test:procedure-validator": "tsx scripts/test-procedure-validator.ts",
+    "test:procedure-verification": "tsx scripts/test-procedure-verification.ts",
     "test:assistant": "tsx scripts/test-assistant-api.ts && tsx scripts/test-assistant-response-validator.ts",
     "check": "npm run validate:procedures && npm run test:procedure-validator && npm run test:assistant && tsc --noEmit",
     "test:assistant:live": "tsx scripts/test-assistant-live.ts",

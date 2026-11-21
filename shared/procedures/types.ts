@@ -13,10 +13,35 @@ export interface ProcedureStep {
   documents: ProcedureDocument[];
 }
 
+export type SourceVerificationStatus =
+  | "unverified"
+  | "verified"
+  | "needs_review";
+
 export interface ProcedureSource {
   title: string;
   url: string;
   authority: string;
+
+  verification?: {
+    status: SourceVerificationStatus;
+    lastCheckedAt?: string;
+    checkedBy?: string;
+    note?: string;
+  };
+}
+
+export type ProcedureVerificationStatus =
+  | "unverified"
+  | "verified"
+  | "needs_review";
+
+export interface ProcedureVerification {
+  status: ProcedureVerificationStatus;
+  lastVerifiedAt?: string;
+  verifiedBy?: string;
+  nextReviewAt?: string;
+  reviewNote?: string;
 }
 
 export interface ProcedureAuthority {
@@ -39,6 +64,6 @@ export interface Procedure {
 
   authority?: ProcedureAuthority;
   sources?: ProcedureSource[];
-
+  verification?: ProcedureVerification;
   steps: ProcedureStep[];
 }

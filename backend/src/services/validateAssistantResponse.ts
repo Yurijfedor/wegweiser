@@ -8,6 +8,7 @@ import type {
 
 const allowedStatuses: ProcedureMatchStatus[] = [
   "matched",
+  "discovered",
   "clarification_needed",
   "correction_needed",
   "not_supported",
@@ -92,6 +93,20 @@ export const validateAssistantResponse = (input: unknown): ProcedureMatch => {
 
     if (!getProcedureById(input.procedureId)) {
       throw new Error(`Unknown procedure ID: ${input.procedureId}`);
+    }
+  }
+
+  if (input.status === "discovered") {
+    if (!isRecord(input.discoveredProcedure)) {
+      throw new Error("Discovered procedure is required for discovered status");
+    }
+
+    if (input.verificationStatus !== "unverified") {
+      throw new Error("Discovered procedure must have unverified status");
+    }
+
+    if (input.procedureId !== undefined) {
+      throw new Error("Procedure ID is not allowed for discovered status");
     }
   }
 

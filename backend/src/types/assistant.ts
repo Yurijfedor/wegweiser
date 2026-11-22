@@ -1,5 +1,8 @@
+import type { Procedure } from "../../../shared/procedures/types";
+
 export type ProcedureMatchStatus =
   | "matched"
+  | "discovered"
   | "clarification_needed"
   | "correction_needed"
   | "not_supported"
@@ -15,6 +18,9 @@ export interface ProcedureMatch {
 
   message?: string;
   questions?: ClarificationQuestion[];
+
+  discoveredProcedure?: Procedure;
+  verificationStatus?: "unverified";
 }
 
 export interface ConversationMessage {

@@ -56,3 +56,7 @@ export type {
 
 export { validateProcedures } from "./validate.js";
 export type { ValidationError } from "./validate.js";
+
+export { procedureCategories, procedureCategoryIds } from "./categories.js";
+
+export type { ProcedureCategory } from "./categories.js";

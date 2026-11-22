@@ -237,3 +237,159 @@
   outline: 3px solid rgba(31, 94, 80, 0.25);
   outline-offset: 2px;
 }
+
+/* Discovered procedure */
+
+.procedure-assistant__discovered {
+  margin-top: 24px;
+  overflow: hidden;
+
+  background-color: #ffffff;
+  border: 1px solid #dfe7e2;
+  border-radius: 12px;
+}
+
+.procedure-assistant__discovered-warning {
+  padding: 20px 24px;
+
+  background-color: #fff8e8;
+  border-bottom: 1px solid #f0dfb8;
+  color: #795b20;
+}
+
+.procedure-assistant__discovered-warning strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.procedure-assistant__discovered-warning p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.procedure-assistant__discovered-content {
+  padding: 28px;
+  color: #163f36;
+}
+
+.procedure-assistant__discovered-label {
+  display: inline-block;
+  margin-bottom: 12px;
+
+  color: #1f7a62;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.procedure-assistant__discovered-content h3 {
+  margin: 0 0 12px;
+  color: #163f36;
+  font-family: var(--font-heading);
+  font-size: clamp(22px, 3vw, 30px);
+  line-height: 1.25;
+}
+
+.procedure-assistant__discovered-content > p {
+  margin: 0 0 24px;
+  color: #52665f;
+  line-height: 1.7;
+}
+
+.procedure-assistant__discovered-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+
+  padding: 16px;
+  margin-bottom: 28px;
+
+  background-color: #f4f8f5;
+  border-radius: 8px;
+
+  font-size: 14px;
+}
+
+.procedure-assistant__discovered-authority,
+.procedure-assistant__discovered-steps,
+.procedure-assistant__discovered-sources {
+  margin-top: 28px;
+}
+
+.procedure-assistant__discovered-content h4 {
+  margin: 0 0 16px;
+  color: #163f36;
+  font-size: 17px;
+}
+
+.procedure-assistant__discovered-authority p {
+  margin: 6px 0;
+  color: #52665f;
+  line-height: 1.6;
+}
+
+.procedure-assistant__discovered a {
+  color: #1f6b57;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.procedure-assistant__discovered a:hover {
+  color: #163f36;
+}
+
+.procedure-assistant__discovered-step {
+  padding: 18px;
+  margin-bottom: 12px;
+
+  background-color: #f7faf8;
+  border: 1px solid #e2ebe5;
+  border-radius: 8px;
+}
+
+.procedure-assistant__discovered-step h5 {
+  margin: 0 0 10px;
+  color: #163f36;
+  font-size: 15px;
+}
+
+.procedure-assistant__discovered-step p {
+  margin: 0 0 12px;
+  color: #52665f;
+  line-height: 1.6;
+}
+
+.procedure-assistant__discovered-step ul,
+.procedure-assistant__discovered-sources ul {
+  padding-left: 22px;
+  margin: 10px 0 0;
+}
+
+.procedure-assistant__discovered-step li,
+.procedure-assistant__discovered-sources li {
+  margin-bottom: 8px;
+  color: #52665f;
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .procedure-assistant__discovered-content {
+    padding: 20px;
+  }
+
+  .procedure-assistant__discovered-warning {
+    padding: 18px 20px;
+  }
+
+  .procedure-assistant__discovered-meta {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .procedure-assistant__discovered-step {
+    padding: 14px;
+  }
+}

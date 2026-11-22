@@ -1,3 +1,5 @@
+import { procedureCategories } from "../../shared/procedures/categories.js";
+
 export interface Category {
   id: string;
   title: string;
@@ -6,47 +8,16 @@ export interface Category {
   href: string;
 }
 
-export const categories: Category[] = [
-  {
-    id: "wohnen",
-    title: "Wohnen & Umzug",
-    description: "Umzug, Anmeldung und alles rund ums Wohnen.",
-    icon: "🏠",
-    href: "#wohnen",
-  },
-  {
-    id: "familie",
-    title: "Familie & Kinder",
-    description: "Informationen zu Familie, Kindern und Betreuung.",
-    icon: "👨‍👩‍👧",
-    href: "#familie",
-  },
-  {
-    id: "arbeit",
-    title: "Arbeit & Beruf",
-    description: "Behördliche Schritte rund um Arbeit und Beruf.",
-    icon: "💼",
-    href: "#arbeit",
-  },
-  {
-    id: "dokumente",
-    title: "Dokumente & Ausweise",
-    description: "Ausweise, Bescheinigungen und wichtige Unterlagen.",
-    icon: "📄",
-    href: "#dokumente",
-  },
-  {
-    id: "finanzen",
-    title: "Finanzen & Leistungen",
-    description: "Anträge, finanzielle Unterstützung und Leistungen.",
-    icon: "💶",
-    href: "#finanzen",
-  },
-  {
-    id: "alltag",
-    title: "Alltag & Sonstiges",
-    description: "Weitere wichtige Angelegenheiten des Alltags.",
-    icon: "📋",
-    href: "#alltag",
-  },
-];
+const categoryPresentation: Record<string, Pick<Category, "icon" | "href">> = {
+  wohnen: { icon: "🏠", href: "#wohnen" },
+  familie: { icon: "👨‍👩‍👧", href: "#familie" },
+  arbeit: { icon: "💼", href: "#arbeit" },
+  dokumente: { icon: "📄", href: "#dokumente" },
+  finanzen: { icon: "💶", href: "#finanzen" },
+  alltag: { icon: "📋", href: "#alltag" },
+};
+
+export const categories: Category[] = procedureCategories.map((category) => ({
+  ...category,
+  ...categoryPresentation[category.id],
+}));

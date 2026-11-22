@@ -258,6 +258,119 @@ const ProcedureAssistant = () => {
           </div>
         )}
 
+        {response?.status === "discovered" && response.discoveredProcedure && (
+          <div className="procedure-assistant__discovered">
+            <div className="procedure-assistant__discovered-warning">
+              <strong>⚠ Noch nicht geprüft</strong>
+              <p>
+                Dieses Verwaltungsverfahren wurde automatisch gefunden und noch
+                nicht redaktionell geprüft. Bitte überprüfe alle Angaben vor
+                einer Antragstellung bei der zuständigen Behörde.
+              </p>
+            </div>
+
+            <div className="procedure-assistant__discovered-content">
+              <span className="procedure-assistant__discovered-label">
+                NEU ENTDECKTES VERFAHREN
+              </span>
+
+              <h3>{response.discoveredProcedure.title}</h3>
+
+              <p>{response.discoveredProcedure.description}</p>
+
+              <div className="procedure-assistant__discovered-meta">
+                <span>
+                  <strong>Region:</strong> {response.discoveredProcedure.region}
+                </span>
+
+                {response.discoveredProcedure.deadline && (
+                  <span>
+                    <strong>Frist:</strong>{" "}
+                    {response.discoveredProcedure.deadline}
+                  </span>
+                )}
+              </div>
+
+              {response.discoveredProcedure.authority && (
+                <div className="procedure-assistant__discovered-authority">
+                  <h4>Zuständige Behörde</h4>
+
+                  <p>{response.discoveredProcedure.authority.name}</p>
+
+                  {response.discoveredProcedure.authority.address && (
+                    <p>{response.discoveredProcedure.authority.address}</p>
+                  )}
+
+                  {response.discoveredProcedure.authority.website && (
+                    <a
+                      href={response.discoveredProcedure.authority.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Webseite der Behörde
+                    </a>
+                  )}
+                </div>
+              )}
+
+              <div className="procedure-assistant__discovered-steps">
+                <h4>Voraussichtliche Schritte</h4>
+
+                {response.discoveredProcedure.steps.map((step, index) => (
+                  <div
+                    key={step.id}
+                    className="procedure-assistant__discovered-step"
+                  >
+                    <h5>
+                      {index + 1}. {step.title}
+                    </h5>
+
+                    <p>{step.description}</p>
+
+                    {step.documents.length > 0 && (
+                      <div>
+                        <strong>Benötigte Unterlagen:</strong>
+
+                        <ul>
+                          {step.documents.map((document) => (
+                            <li key={document.id}>
+                              {document.title}
+                              {!document.required && " (optional)"}
+                              {document.condition && ` — ${document.condition}`}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {response.discoveredProcedure.sources &&
+                response.discoveredProcedure.sources.length > 0 && (
+                  <div className="procedure-assistant__discovered-sources">
+                    <h4>Gefundene Quellen</h4>
+
+                    <ul>
+                      {response.discoveredProcedure.sources.map((source) => (
+                        <li key={source.url}>
+                          <a
+                            href={source.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {source.title}
+                          </a>
+                          <span> ({source.authority})</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+            </div>
+          </div>
+        )}
+
         {error && <div className="procedure-assistant__response">{error}</div>}
       </div>
     </section>

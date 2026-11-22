@@ -1,15 +1,8 @@
-import OpenAI from "openai";
-
+import { getOpenAIClient } from "./openaiClient";
 import { availableProcedures } from "../data/procedures";
 import { validateAssistantResponse } from "./validateAssistantResponse";
 
 import type { ConversationMessage, ProcedureMatch } from "../types/assistant";
-
-const getOpenAIClient = () => {
-  return new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
-};
 
 const proceduresPrompt = availableProcedures
   .map((procedure) => `- ${procedure.id}: ${procedure.description}`)

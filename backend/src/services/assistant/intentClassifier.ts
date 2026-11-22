@@ -1,3 +1,5 @@
+import OpenAI from "openai";
+import { getOpenAIClient } from "../openaiClient";
 import type { ConversationMessage } from "../../types/assistant";
 
 export type IntentClassification =
@@ -23,14 +25,6 @@ export interface IntentClassifierInput {
 export type IntentClassifier = (
   input: IntentClassifierInput,
 ) => Promise<IntentClassifierResult>;
-
-import OpenAI from "openai";
-
-const getOpenAIClient = () => {
-  return new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-  });
-};
 
 export const createIntentClassifier = (openai?: OpenAI): IntentClassifier => {
   return async (input) => {

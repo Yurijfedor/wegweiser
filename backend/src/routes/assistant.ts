@@ -3,6 +3,10 @@ import { Router } from "express";
 import { getAssistantResponse } from "../services/openai";
 import { createIntentClassifier } from "../services/assistant/intentClassifier";
 
+import { createDiscoveryService } from "../services/discovery/discoveryService";
+
+import type { DiscoveryService } from "../services/discovery/discoveryService";
+
 import type { IntentClassifier } from "../services/assistant/intentClassifier";
 
 import type { ConversationMessage, ProcedureMatch } from "../types/assistant";
@@ -12,9 +16,12 @@ type AssistantService = (
   conversation: ConversationMessage[],
 ) => Promise<ProcedureMatch>;
 
+const defaultDiscoveryService = createDiscoveryService();
+
 export const createAssistantRouter = (
   assistantService: AssistantService = getAssistantResponse,
   intentClassifier: IntentClassifier = createIntentClassifier(),
+  discoveryService: DiscoveryService = defaultDiscoveryService,
 ) => {
   const router = Router();
 
@@ -78,7 +85,49 @@ export const createAssistantRouter = (
         conversationHistory,
       );
 
-      return response.json(assistantResponse);
+      if (assistantResponse.status !== "not_supported") {
+        return response.json(assistantResponse);
+      }
+
+      try {
+        const discoveryResult = await discoveryService.discover({
+          conversation: conversationHistory,
+          location: {
+            countryCode: location.countryCode,
+            city: location.city,
+            ...(typeof location.region === "string" && {
+              region: location.region,
+            }),
+          },
+        });
+
+        if (discoveryResult.status === "candidate_created") {
+          const candidate = discoveryResult.candidate;
+
+          return response.json({
+            status: "discovered",
+            language,
+            categoryId: candidate.procedure.categoryId,
+            discoveredProcedure: {
+              ...candidate.procedure,
+              id: candidate.id,
+            },
+            verificationStatus: "unverified",
+            message:
+              language === "uk"
+                ? "Ми знайшли цю процедуру автоматично. Вона ще не перевірена редактором. Будь ласка, перевірте інформацію та джерела у відповідній установі перед виконанням будь-яких дій."
+                : language === "de"
+                  ? "Wir haben dieses Verfahren automatisch gefunden. Es wurde noch nicht redaktionell geprüft. Bitte überprüfen Sie die Informationen und Quellen vor weiteren Schritten bei der zuständigen Behörde."
+                  : "We found this procedure automatically. It has not yet been reviewed. Please verify the information and sources with the responsible authority before taking action.",
+          });
+        }
+
+        return response.json(assistantResponse);
+      } catch (discoveryError) {
+        console.error("Discovery failed:", discoveryError);
+
+        return response.json(assistantResponse);
+      }
     } catch (error) {
       console.error("Assistant request failed:", error);
 

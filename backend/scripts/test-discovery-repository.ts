@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { createInMemoryDiscoveryRepository } from "../src/services/discovery/discoveryRepository";
+import { createInMemoryDiscoveryRepository } from "../src/services/discovery/inMemoryDiscoveryRepository";
 import type { DiscoveryCandidate } from "../src/services/discovery/discoveryCandidate";
 
 const createCandidate = (id: string): DiscoveryCandidate => ({

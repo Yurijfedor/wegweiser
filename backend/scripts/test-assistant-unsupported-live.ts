@@ -6,12 +6,13 @@ import type { ConversationMessage } from "../src/types/assistant";
 const conversation: ConversationMessage[] = [
   {
     role: "user",
-    content: "Wie kann ich eine Pizza zu Hause backen?",
+    content:
+      "Ich möchte eine mobile Verkaufsbude auf einem öffentlichen Platz in Mayen aufstellen. Welche Genehmigung brauche ich?",
   },
 ];
 
 const runTest = async () => {
-  console.log("Testing live AI unsupported request...\n");
+  console.log("Testing live AI unsupported administrative request...\n");
 
   console.log("User request:");
   console.log(conversation[0].content);
@@ -27,10 +28,10 @@ const runTest = async () => {
   assert.equal(
     response.status,
     "not_supported",
-    "AI should reject unrelated requests",
+    "AI should identify unsupported administrative procedures",
   );
 
-  console.log("✓ AI correctly identifies unsupported request");
+  console.log("✓ AI correctly identifies unsupported administrative procedure");
 };
 
 runTest().catch((error) => {

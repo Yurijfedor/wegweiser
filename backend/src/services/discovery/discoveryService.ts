@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 
 import { createOpenAIDiscoverySourceProvider } from "./openAiDiscoverySourceProvider";
 import { createOpenAIDiscoveryCandidateGenerator } from "./openAiDiscoveryCandidateGenerator";
-import { createInMemoryDiscoveryRepository } from "./discoveryRepository";
+import { createInMemoryDiscoveryRepository } from "./inMemoryDiscoveryRepository";
 import { validateDiscoveryCandidateBusinessRules } from "./discoveryCandidateValidator";
 import { createDiscoveryDuplicateChecker } from "./discoveryDuplicateChecker";
 

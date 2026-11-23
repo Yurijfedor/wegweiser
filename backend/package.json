@@ -20,6 +20,7 @@
     "test:assistant": "tsx scripts/test-assistant-api.ts && tsx scripts/test-assistant-response-validator.ts",
     "check": "npm run validate:procedures && npm run test:procedure-validator && npm run test:procedure-verification && npm run test:discovery-validator && npm run test:discovery-repository && npm run test:discovery-candidate-validator && npm run test:discovery-source-provider && npm run test:discovery-candidate-generator && npm run test:discovery-duplicate-checker && npm run test:discovery-service && npm run test:assistant && tsc --noEmit",
     "test:assistant:live": "tsx scripts/test-assistant-live.ts",
+    "test:discovery-sqlite-repository": "tsx scripts/test-discovery-sqlite-repository.ts",
     "test:assistant:clarification:live": "tsx scripts/test-assistant-clarification-live.ts",
     "test:assistant:unsupported:live": "tsx scripts/test-assistant-unsupported-live.ts",
     "test:assistant:conversation:live": "tsx scripts/test-assistant-conversation-live.ts",
@@ -30,12 +31,14 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "better-sqlite3": "^13.2.0",
     "cors": "^2.8.6",
     "dotenv": "^18.0.10",
     "express": "^5.3.0",
     "openai": "^7.55.0"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^9.6.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.6",

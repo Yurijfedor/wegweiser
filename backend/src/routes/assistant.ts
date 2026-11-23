@@ -5,6 +5,9 @@ import { createIntentClassifier } from "../services/assistant/intentClassifier";
 
 import { createDiscoveryService } from "../services/discovery/discoveryService";
 
+import { database } from "../database/database";
+import { createSQLiteDiscoveryRepository } from "../services/discovery/sqliteDiscoveryRepository";
+
 import type { DiscoveryService } from "../services/discovery/discoveryService";
 
 import type { IntentClassifier } from "../services/assistant/intentClassifier";
@@ -16,7 +19,11 @@ type AssistantService = (
   conversation: ConversationMessage[],
 ) => Promise<ProcedureMatch>;
 
-const defaultDiscoveryService = createDiscoveryService();
+const defaultDiscoveryRepository = createSQLiteDiscoveryRepository(database);
+
+const defaultDiscoveryService = createDiscoveryService({
+  repository: defaultDiscoveryRepository,
+});
 
 export const createAssistantRouter = (
   assistantService: AssistantService = getAssistantResponse,

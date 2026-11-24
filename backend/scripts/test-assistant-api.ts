@@ -68,7 +68,7 @@ const runTests = async () => {
     },
   };
 
-  let mockDiscoveryError: Error | null = null;
+  const mockDiscoveryError: Error | null = null;
 
   const mockDiscoveryService: DiscoveryService = {
     async discover() {

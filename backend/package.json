@@ -20,6 +20,7 @@
     "test:assistant": "tsx scripts/test-assistant-api.ts && tsx scripts/test-assistant-response-validator.ts",
     "check": "npm run validate:procedures && npm run test:procedure-validator && npm run test:procedure-verification && npm run test:discovery-validator && npm run test:discovery-repository && npm run test:discovery-candidate-validator && npm run test:discovery-source-provider && npm run test:discovery-candidate-generator && npm run test:discovery-duplicate-checker && npm run test:discovery-service && npm run test:assistant && tsc --noEmit",
     "test:assistant:live": "tsx scripts/test-assistant-live.ts",
+    "test:discovery-api": "tsx scripts/test-discovery-api.ts",
     "test:discovery-sqlite-repository": "tsx scripts/test-discovery-sqlite-repository.ts",
     "test:assistant:clarification:live": "tsx scripts/test-assistant-clarification-live.ts",
     "test:assistant:unsupported:live": "tsx scripts/test-assistant-unsupported-live.ts",

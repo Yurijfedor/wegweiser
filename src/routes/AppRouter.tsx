@@ -11,6 +11,10 @@ const AppRouter = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/verfahren/:procedureId" element={<ProcedurePage />} />
+        <Route
+          path="/verfahren/discovered/:candidateId"
+          element={<ProcedurePage />}
+        />
       </Routes>
     </BrowserRouter>
   );

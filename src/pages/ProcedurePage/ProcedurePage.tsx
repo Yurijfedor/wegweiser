@@ -1,26 +1,108 @@
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { getProcedureById } from "../../data/procedures";
+import type { Procedure } from "../../types/procedure";
 
 import { Header, Footer } from "../../components/layout";
-
 import Checklist from "../../components/procedures/Checklist";
 
 import "./ProcedurePage.css";
 
+interface DiscoveryCandidateResponse {
+  candidate: {
+    id: string;
+    procedure: Omit<Procedure, "id">;
+  };
+}
+
 const ProcedurePage = () => {
-  const { procedureId } = useParams();
+  const { procedureId, candidateId } = useParams();
 
-  // Тимчасово підтримуємо першу процедуру.
-  const procedure = procedureId ? getProcedureById(procedureId) : undefined;
+  const [discoveredProcedure, setDiscoveredProcedure] =
+    useState<Procedure | null>(null);
 
-  if (!procedure) {
+  const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState(false);
+
+  useEffect(() => {
+    if (!candidateId) return;
+
+    const controller = new AbortController();
+
+    const loadDiscoveredProcedure = async () => {
+      setLoading(true);
+      setLoadError(false);
+      setDiscoveredProcedure(null);
+
+      try {
+        const response = await fetch(
+          `http://localhost:3001/api/discovery/candidates/${candidateId}`,
+          { signal: controller.signal },
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to load discovered procedure");
+        }
+
+        const data = (await response.json()) as DiscoveryCandidateResponse;
+
+        const procedure: Procedure = {
+          ...data.candidate.procedure,
+          id: data.candidate.id,
+        };
+
+        setDiscoveredProcedure(procedure);
+      } catch (error) {
+        if (error instanceof Error && error.name === "AbortError") {
+          return;
+        }
+
+        console.error("Failed to load discovered procedure:", error);
+        setLoadError(true);
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadDiscoveredProcedure();
+
+    return () => controller.abort();
+  }, [candidateId]);
+
+  const procedure = candidateId
+    ? discoveredProcedure
+    : procedureId
+      ? getProcedureById(procedureId)
+      : undefined;
+
+  if (loading) {
     return (
       <>
         <Header />
         <main className="procedure-page">
           <div className="procedure-page__container">
-            <h1>Verfahren nicht gefunden</h1>
+            <p>Verfahren wird geladen...</p>
+          </div>
+        </main>
+        <Footer />
+      </>
+    );
+  }
+
+  if (loadError || !procedure) {
+    return (
+      <>
+        <Header />
+        <main className="procedure-page">
+          <div className="procedure-page__container">
+            <h1>
+              {loadError
+                ? "Informationen konnten nicht geladen werden"
+                : "Verfahren nicht gefunden"}
+            </h1>
             <Link to="/">Zurück zur Startseite</Link>
           </div>
         </main>
@@ -138,6 +220,7 @@ const ProcedurePage = () => {
               )}
             </section>
           )}
+
           {procedure.sources && (
             <section className="procedure-page__sources">
               <h2>Offizielle Informationen</h2>

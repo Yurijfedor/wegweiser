@@ -2,6 +2,7 @@ import cors from "cors";
 import express from "express";
 
 import { createAssistantRouter } from "./routes/assistant";
+import { createDiscoveryRouter } from "./routes/discovery";
 
 import type { Router } from "express";
 
@@ -14,6 +15,7 @@ export const createApp = (
   app.use(express.json());
 
   app.use("/api/assistant", assistantRouter);
+  app.use("/api/discovery", createDiscoveryRouter());
 
   app.get("/api/health", (_request, response) => {
     response.json({
